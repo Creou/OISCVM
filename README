@@ -1,5 +1,10 @@
 Simple virtual machine of a "one instruction set" cpu.
 
+Based on the single instruction SUBLEQ (Subtract and 
+branch if less than or equal to 0).
+
+Written in C#.
+
 ===
 
 All code in this project is covered under the terms 
