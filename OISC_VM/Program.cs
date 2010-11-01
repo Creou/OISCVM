@@ -11,30 +11,39 @@ namespace OISC_VM
         static void Main(string[] args)
         {
             // Create the memory.
-            List<int> memory = new List<int>();
-
-            // Load the data into the memory.
+            int[] memory = new int[255];
 
             // Load the program into memory.
-            String[] lines = File.ReadAllLines("Add.txt");
+            String[] lines = File.ReadAllLines(args[0]);
+            int memoryIndex = 0;
             foreach (var line in lines)
             {
                 String[] tokens = line.Split(' ');
                 foreach (var token in tokens)                
                 {
-                    // Rebase each address as it is loaded.
-                    //TODO:
-
                     // Load each instruction into memory.
-                    memory.Add(int.Parse(token));
+                    memory[memoryIndex] = int.Parse(token);
+                    memoryIndex++;
                 }
             }
-            
+
+            // Load the args into memory.
+            for (int i = 1; i < args.Length; i++)
+            {
+                String param = args[i];
+                memory[i] = int.Parse(param);
+            }
+
+            // Initialise the CPU status.
             int pc = 0;
             int a;
             int b;
             int c;
 
+            // Load the program counter from the first memory value.
+            pc = memory[0];
+
+            // Execute the program.
             while (pc >= 0)
             {
                 a = memory[pc];
@@ -44,7 +53,8 @@ namespace OISC_VM
                 {
                     pc = -1;
                 }
-                else {
+                else
+                {
                     memory[b] = memory[b] - memory[a];
                     if (memory[b] > 0)
                     {
@@ -55,13 +65,13 @@ namespace OISC_VM
                         pc = c;
                     }
                 }
-
             }
 
+            // Just dump out the whole memory.
             Console.WriteLine("Finished");
             foreach (var col in memory)
             {
-                Console.WriteLine(col);
+                Console.Write(col + " ");
             }
             Console.ReadLine();
 
