@@ -1,0 +1,14 @@
+Simple virtual machine of a "one instruction set" cpu.
+
+===
+
+All code in this project is covered under the terms 
+of the GNU General Public License a copy of which 
+is available in the same directory under the file 
+name LICENSE
+
+===
+
+This program is Copyright 2010 Simon P Stevens
+
+==

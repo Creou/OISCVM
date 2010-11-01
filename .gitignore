@@ -1,0 +1,14 @@
+# Binaries #
+*.exe
+*.dll
+
+# User config #
+*.suo
+*.user
+
+.gitignore~
+*.swp
+*~
+
+bin/
+obj/
