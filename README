@@ -5,6 +5,9 @@ branch if less than or equal to 0).
 
 Written in C#.
 
+Loads a program into memory and executes it.
+Includes a memory mapped console output device for displaying results.
+
 ===
 
 All code in this project is covered under the terms 
@@ -17,3 +20,13 @@ name LICENSE
 This program is Copyright 2010 Simon P Stevens
 
 ==
+
+TODO:
+
+Input device: Somehow have keyboard input written to memory locations.
+
+Compiler:
+ - Address labels
+ - Menumoic instruction replacement.
+
+Disk device: Have a mapped memory location that can be written to to send commands to a disk controller. Then have the disk controller load the requested memory from disk into main memory. The disk controller could either be for emulated binary disks, or for host disk access.

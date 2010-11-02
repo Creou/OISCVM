@@ -3,76 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Threading;
 
 namespace OISC_VM
 {
     class Program
     {
+        public static Memory _mem;
+        public static CPU _cpu;
+        public static IMemoryMappedDevice _consoleDevice;
+
         static void Main(string[] args)
         {
-            // Create the memory.
-            int[] memory = new int[255];
-
-            // Load the program into memory.
-            String[] lines = File.ReadAllLines(args[0]);
-            int memoryIndex = 0;
-            foreach (var line in lines)
+            // Create memory and load the program and arguments (if present).
+            _mem = new Memory();
+            if (args.Length >= 1)
             {
-                String[] tokens = line.Split(' ');
-                foreach (var token in tokens)                
-                {
-                    // Load each instruction into memory.
-                    memory[memoryIndex] = int.Parse(token);
-                    memoryIndex++;
-                }
+                _mem.LoadProgram(args[0], args.Skip(1));
+            }
+            else if (args.Length == 1)
+            {
+                _mem.LoadProgram(args[0]);
             }
 
-            // Load the args into memory.
-            for (int i = 1; i < args.Length; i++)
-            {
-                String param = args[i];
-                memory[i] = int.Parse(param);
-            }
+            // Create a memory mapped console device.
+            _consoleDevice = new ConsoleDevice(_mem, 245, 10, 100);
 
-            // Initialise the CPU status.
-            int pc = 0;
-            int a;
-            int b;
-            int c;
+            // Create the CPU and start it running.
+            _cpu = new CPU(_mem);
+            Thread.Sleep(2000);
+            _cpu.Run();
 
-            // Load the program counter from the first memory value.
-            pc = memory[0];
-
-            // Execute the program.
-            while (pc >= 0)
-            {
-                a = memory[pc];
-                b = memory[pc+1];
-                c = memory[pc+2];
-                if (a < 0 || b < 0)
-                {
-                    pc = -1;
-                }
-                else
-                {
-                    memory[b] = memory[b] - memory[a];
-                    if (memory[b] > 0)
-                    {
-                        pc = pc + 3;
-                    }
-                    else
-                    {
-                        pc = c;
-                    }
-                }
-            }
-
-            // Just dump out the whole memory.
-            Console.WriteLine("Finished");
-            foreach (var col in memory)
-            {
-                Console.Write(col + " ");
-            }
             Console.ReadLine();
 
         }
