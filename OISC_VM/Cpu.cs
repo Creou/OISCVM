@@ -14,9 +14,9 @@ namespace OISC_VM
         private int _bValue;
         private int _cValue;
 
-        private IMemory _memoryBus;
+        private IMemoryBus _memoryBus;
 
-        public CPU(IMemory memoryBus)
+        public CPU(IMemoryBus memoryBus)
         {
             _memoryBus = memoryBus;
         }

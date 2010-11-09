@@ -8,9 +8,9 @@ namespace OISC_VM
 {
     public abstract class AutoRefreshingMemoryMappedDevice : IMemoryMappedDevice
     {
-        private IMemory _memoryBus;
+        private IMemoryBus _memoryBus;
 
-        public AutoRefreshingMemoryMappedDevice(IMemory memoryBus, int memoryRangeStart, int memoryRangeLength, int refreshInterval)
+        public AutoRefreshingMemoryMappedDevice(IMemoryBus memoryBus, int memoryRangeStart, int memoryRangeLength, int refreshInterval)
         {
             _memoryBus = memoryBus;
             this.MemoryRangeStart = memoryRangeStart;
@@ -42,7 +42,7 @@ namespace OISC_VM
     }
     public class ConsoleDevice : AutoRefreshingMemoryMappedDevice
     {
-        public ConsoleDevice(IMemory memoryBus, int memoryRangeStart, int memoryRangeLength, int refreshInterval)
+        public ConsoleDevice(IMemoryBus memoryBus, int memoryRangeStart, int memoryRangeLength, int refreshInterval)
             : base(memoryBus, memoryRangeStart, memoryRangeLength, refreshInterval)
         {
         }

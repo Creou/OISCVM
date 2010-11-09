@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace OISC_VM
 {
-    public class Memory : IMemory
+    public class Memory : IMemoryBus
     {
         // Create the memory.
         int[] _memory;
