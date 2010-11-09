@@ -21,31 +21,41 @@ namespace OISC_Compiler
 
         public byte[] Compile()
         {
-            List<Instruction> instructionList = new List<Instruction>();
+            InstructionFactory instructionParser = new InstructionFactory();
+
+            List<Instruction> sourceList = new List<Instruction>();
+            Dictionary<int, SubleqInstruction> instructionDictionary = new Dictionary<int, SubleqInstruction>();
+            int instructionSourceAddress = 0;
+
             foreach (String sourceLine in _sourceCodeLines)
             {
-                Instruction sourceInstruction = GenerateInstruction(sourceLine);
-                instructionList.Add(sourceInstruction);
+                Instruction sourceInstruction = instructionParser.GenerateInstruction(sourceLine, instructionSourceAddress);
+
+                SubleqInstruction executableInstruction = sourceInstruction as SubleqInstruction;
+                if (executableInstruction != null)
+                {
+                    instructionDictionary.Add(instructionSourceAddress, executableInstruction);
+                }
+                sourceList.Add(sourceInstruction);
+
+                instructionSourceAddress += sourceInstruction.InstructionSourceAddressLength;
+            }
+
+            // Loop through each instruction and map each branch to the destination instruction.
+            foreach (var instruction in instructionDictionary)
+            {
+                SubleqInstruction executableInstruction = instruction.Value;
+                if (executableInstruction != null)
+                {
+                    if (executableInstruction.BranchSourceAddress != -1)
+                    {
+                        var destinationInstruction = instructionDictionary[executableInstruction.BranchSourceAddress] as SubleqInstruction;
+                        executableInstruction.MapBranchAddress(destinationInstruction);
+                    }
+                }
             }
 
             return new byte[1];
-        }
-
-        private Instruction GenerateInstruction(String sourceLine)
-        {
-            if (sourceLine.StartsWith("//"))
-            {
-                // This line is a comment.
-                return new CommentInstruction(sourceLine);
-            }
-            else 
-            {
-                String[] instructionDate = sourceLine.Split(' ');
-                String operand_a = instructionDate[0];
-                String operand_b = instructionDate[1];
-                String operand_c = instructionDate[2];
-                return new SubleqInstruction(sourceLine, operand_a, operand_b, operand_c);
-            }
         }
     }
 }
