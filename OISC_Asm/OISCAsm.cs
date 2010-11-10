@@ -10,11 +10,11 @@ namespace OISC_Compiler
         byte[] Compile();
     }
 
-    public class OISCCompiler :ICompiler
+    public class OISCAsm :ICompiler
     {
         private String[] _sourceCodeLines;
 
-        public OISCCompiler(String[] sourceCodeLines)
+        public OISCAsm(String[] sourceCodeLines)
         {
             _sourceCodeLines = sourceCodeLines;
         }

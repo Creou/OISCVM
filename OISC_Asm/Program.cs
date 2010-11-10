@@ -30,7 +30,7 @@ namespace OISC_Compiler
             String[] sourceCodeLines = File.ReadAllLines(filePath);
 
             // Compile source.
-            OISCCompiler compiler = new OISCCompiler(sourceCodeLines);
+            OISCAsm compiler = new OISCAsm(sourceCodeLines);
             byte[] compiledBytes = compiler.Compile();
 
             // Output compiled binary to file.
