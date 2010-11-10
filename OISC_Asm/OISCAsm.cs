@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OISC_Compiler.Instructions;
 
 namespace OISC_Compiler
 {
@@ -23,22 +24,30 @@ namespace OISC_Compiler
         {
             InstructionFactory instructionParser = new InstructionFactory();
 
+            // We parse the source and build a list of all source 
+            // instructions (including comments), and a dictionary
+            // of executable instructions, indexed by their source
+            // starting address.
             List<Instruction> sourceList = new List<Instruction>();
-            Dictionary<int, SubleqInstruction> instructionDictionary = new Dictionary<int, SubleqInstruction>();
+            Dictionary<int, ExecutableInstruction> instructionDictionary = new Dictionary<int, ExecutableInstruction>();
             int instructionSourceAddress = 0;
+            int instructionSourceLineNumber = 0;
 
+            // Loop through each line of source code and create an instruction for it.
             foreach (String sourceLine in _sourceCodeLines)
             {
-                Instruction sourceInstruction = instructionParser.GenerateInstruction(sourceLine, instructionSourceAddress);
+                Instruction sourceInstruction = instructionParser.GenerateInstruction(sourceLine, instructionSourceLineNumber, instructionSourceAddress);
 
-                SubleqInstruction executableInstruction = sourceInstruction as SubleqInstruction;
+                ExecutableInstruction executableInstruction = sourceInstruction as ExecutableInstruction;
                 if (executableInstruction != null)
                 {
                     instructionDictionary.Add(instructionSourceAddress, executableInstruction);
+                    instructionSourceAddress += executableInstruction.SourceAddressLength;
                 }
                 sourceList.Add(sourceInstruction);
 
-                instructionSourceAddress += sourceInstruction.InstructionSourceAddressLength;
+                
+                instructionSourceLineNumber++;
             }
 
             // Loop through each instruction and map each branch address to the destination instruction.
@@ -46,18 +55,16 @@ namespace OISC_Compiler
             // tree before we start generating binary and create the actual addresses.
             foreach (var instruction in instructionDictionary)
             {
-                SubleqInstruction executableInstruction = instruction.Value;
-                if (executableInstruction != null)
+                IBranchingInstruction branchingInstruction = instruction.Value as IBranchingInstruction;
+                if (branchingInstruction != null)
                 {
-                    if (executableInstruction.BranchSourceAddress != -1)
-                    {
-                        SubleqInstruction destinationInstruction = instructionDictionary[executableInstruction.BranchSourceAddress] ;
-                        executableInstruction.MapBranchAddress(destinationInstruction);
-                    }
+                    branchingInstruction.MapBranchAddress(instructionDictionary);
                 }
             }
 
             return new byte[1];
         }
+
+
     }
 }

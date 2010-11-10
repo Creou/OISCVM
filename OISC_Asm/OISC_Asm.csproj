@@ -43,7 +43,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Instruction.cs" />
+    <Compile Include="Instructions\BranchingInstruction.cs" />
+    <Compile Include="Instructions\CommentInstruction.cs" />
+    <Compile Include="Instructions\ExecutableInstruction.cs" />
+    <Compile Include="Instructions\IBranchingInstruction.cs" />
+    <Compile Include="Instructions\Instruction.cs" />
+    <Compile Include="Instructions\InstructionFactory.cs" />
+    <Compile Include="Instructions\SubleqInstruction.cs" />
     <Compile Include="OISCAsm.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -58,6 +64,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Instructions\InstructionHierarchy.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
