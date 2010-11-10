@@ -6,12 +6,12 @@ using OISC_Compiler.Instructions;
 
 namespace OISC_Compiler
 {
-    public interface ICompiler
+    public interface IAssembler
     {
-        byte[] Compile();
+        byte[] Assemble();
     }
 
-    public class OISCAsm :ICompiler
+    public class OISCAsm :IAssembler
     {
         private String[] _sourceCodeLines;
 
@@ -20,7 +20,14 @@ namespace OISC_Compiler
             _sourceCodeLines = sourceCodeLines;
         }
 
-        public byte[] Compile()
+        public byte[] Assemble()
+        {
+            ICollection<ExecutableInstruction> sourceTree = ParseSource();
+
+            return new byte[1];
+        }
+
+        private ICollection<ExecutableInstruction> ParseSource()
         {
             InstructionFactory instructionParser = new InstructionFactory();
 
@@ -46,7 +53,6 @@ namespace OISC_Compiler
                 }
                 sourceList.Add(sourceInstruction);
 
-                
                 instructionSourceLineNumber++;
             }
 
@@ -62,7 +68,7 @@ namespace OISC_Compiler
                 }
             }
 
-            return new byte[1];
+            return instructionDictionary.Values;
         }
 
 

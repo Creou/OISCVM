@@ -31,7 +31,7 @@ namespace OISC_Compiler
 
             // Compile source.
             OISCAsm compiler = new OISCAsm(sourceCodeLines);
-            byte[] compiledBytes = compiler.Compile();
+            byte[] compiledBytes = compiler.Assemble();
 
             // Output compiled binary to file.
             String outputFilePath = GenerateOutputFilename(filePath);
