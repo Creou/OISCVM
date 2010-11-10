@@ -41,7 +41,9 @@ namespace OISC_Compiler
                 instructionSourceAddress += sourceInstruction.InstructionSourceAddressLength;
             }
 
-            // Loop through each instruction and map each branch to the destination instruction.
+            // Loop through each instruction and map each branch address to the destination instruction.
+            // This is done at the source level at this stage so we have a correctly mapped instruction 
+            // tree before we start generating binary and create the actual addresses.
             foreach (var instruction in instructionDictionary)
             {
                 SubleqInstruction executableInstruction = instruction.Value;
@@ -49,7 +51,7 @@ namespace OISC_Compiler
                 {
                     if (executableInstruction.BranchSourceAddress != -1)
                     {
-                        var destinationInstruction = instructionDictionary[executableInstruction.BranchSourceAddress] as SubleqInstruction;
+                        SubleqInstruction destinationInstruction = instructionDictionary[executableInstruction.BranchSourceAddress] ;
                         executableInstruction.MapBranchAddress(destinationInstruction);
                     }
                 }
