@@ -23,8 +23,27 @@ namespace OISC_Compiler
         public byte[] Assemble()
         {
             ICollection<ExecutableInstruction> sourceTree = ParseSource();
+            
+            // Resolve the binary addresses for each instruction.
+            Int64 currentBinaryAddress = 0;
+            foreach (ExecutableInstruction instruction in sourceTree)
+            {
+                instruction.SetBinaryAddress(currentBinaryAddress);
+                currentBinaryAddress += instruction.BinaryAddressLength;
+            }
 
-            return new byte[1];
+            // Create an array of the required size to hold the binary data.
+            // Size is taken from the final binary address used.
+            byte[] binary = new byte[currentBinaryAddress];
+
+            // Assemble the binary for each instruction and store it in the array.
+            foreach (ExecutableInstruction instruction in sourceTree)
+            {
+                byte[] instructionBinary = instruction.AssembleBinary();
+                Array.Copy(instructionBinary, 0, binary, instruction.BinaryAddress, instruction.BinaryAddressLength);
+            }
+
+            return binary;
         }
 
         private ICollection<ExecutableInstruction> ParseSource()
