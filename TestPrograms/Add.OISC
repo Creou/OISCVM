@@ -9,7 +9,7 @@
 5 4 12
 5 5 15
 // Move the result (from address 4) To the mapped console (address 245-255)
-245 245 18
+30 30 18
 4 5 21
-5 245 24
+5 30 24
 5 5 -1

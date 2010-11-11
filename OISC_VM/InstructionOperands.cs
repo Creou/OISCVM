@@ -7,8 +7,8 @@ namespace OISC_VM
 {
     public class InstructionOperands
     {
-        public int OperandA { get; set; }
-        public int OperandB { get; set; }
-        public int OperandC { get; set; }
+        public long OperandA { get; set; }
+        public long OperandB { get; set; }
+        public long OperandC { get; set; }
     }
 }

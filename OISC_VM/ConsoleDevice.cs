@@ -21,11 +21,11 @@ namespace OISC_VM
 
         public void RefreshDevice()
         {
-            int[] memory = _memoryBus.ReadDataRange(this.MemoryRangeStart, this.MemoryRangeLength);
+            byte[] memory = _memoryBus.ReadDataRange(this.MemoryRangeStart, this.MemoryRangeLength);
             RefreshDevice(memory);
         }
 
-        protected abstract void RefreshDevice(int[] mappedMemory);
+        protected abstract void RefreshDevice(byte[] mappedMemory);
 
 
         public int MemoryRangeStart
@@ -47,7 +47,7 @@ namespace OISC_VM
         {
         }
 
-        protected override void RefreshDevice(int[] mappedMemory)
+        protected override void RefreshDevice(byte[] mappedMemory)
         {
             Console.Clear();
             for (int i = 0; i < mappedMemory.Length; i++)

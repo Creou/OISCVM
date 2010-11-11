@@ -27,7 +27,7 @@ namespace OISC_VM
             }
 
             // Create a memory mapped console device.
-            _consoleDevice = new ConsoleDevice(_mem, 245, 10, 100);
+            _consoleDevice = new ConsoleDevice(_mem, 240, 16, 100);
 
             // Create the CPU and start it running.
             _cpu = new CPU(_mem);

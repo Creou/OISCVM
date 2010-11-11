@@ -8,11 +8,11 @@ namespace OISC_VM
 
     public class CPU
     {
-        private int _pc;
+        private long _pc;
         private InstructionOperands _instructionOperands;
-        private int _aValue;
-        private int _bValue;
-        private int _cValue;
+        private long _aValue;
+        private long _bValue;
+        private long _cValue;
 
         private IMemoryBus _memoryBus;
 
@@ -50,7 +50,7 @@ namespace OISC_VM
             else
             {
                 // Subract
-                int newBValue = _bValue - _aValue;
+                long newBValue = _bValue - _aValue;
                 _memoryBus.WriteData(_instructionOperands.OperandB, newBValue);
 
                 if (newBValue <= 0)
@@ -61,7 +61,7 @@ namespace OISC_VM
                 else
                 {
                     // Otherwise just increment the program counter to the next instruction.
-                    _pc += 3;
+                    _pc += (64/8)*3;
                 }
             }
         }

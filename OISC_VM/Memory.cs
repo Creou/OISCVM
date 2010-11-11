@@ -10,11 +10,11 @@ namespace OISC_VM
     public class Memory : IMemoryBus
     {
         // Create the memory.
-        int[] _memory;
+        byte[] _memory;
 
         public Memory()
         {
-            _memory = new int[255];
+            _memory = new byte[256];
         }
 
         public void LoadProgram(String fileName) 
@@ -24,52 +24,85 @@ namespace OISC_VM
         public void LoadProgram(String fileName, IEnumerable<String> programArguments)
         {
             // Load the program into memory.
-            String[] lines = File.ReadAllLines(fileName);
-            int memoryIndex = 0;
-            foreach (var line in lines)
-            {
-                if (!line.StartsWith("//"))
-                {
-                    String[] tokens = line.Split(' ');
-                    foreach (var token in tokens)
-                    {
-                        // Load each instruction into memory.
-                        _memory[memoryIndex] = int.Parse(token);
-                        memoryIndex++;
-                    }
-                }
-            }
+            byte[] programData = File.ReadAllBytes(fileName);
+            Array.Copy(programData, _memory, programData.Length);
 
             // Load the args into memory.
             if (programArguments != null)
             {
-                int argIndex = 3;
+                int argIndex = (64*3)/8;
                 foreach (var arg in programArguments)
                 {
-                    _memory[argIndex] = int.Parse(arg);
-                    argIndex++;
+                    long argValue = long.Parse(arg);
+                    byte[] argBinary = BitConverter.GetBytes(argValue);
+
+                    Array.Copy(argBinary, 0, _memory, argIndex, argBinary.Length);
+                    argIndex += 64 / 8;
                 }
             }
         }
 
-        public InstructionOperands FetchInstrucitonOperands(int memoryLocation)
+        //public void LoadProgramSource(String fileName, IEnumerable<String> programArguments)
+        //{
+        //    // Load the program into memory.
+        //    String[] lines = File.ReadAllLines(fileName);
+        //    int memoryIndex = 0;
+        //    foreach (var line in lines)
+        //    {
+        //        if (!line.StartsWith("//"))
+        //        {
+        //            String[] tokens = line.Split(' ');
+        //            foreach (var token in tokens)
+        //            {
+        //                // Load each instruction into memory.
+        //                _memory[memoryIndex] = int.Parse(token);
+        //                memoryIndex++;
+        //            }
+        //        }
+        //    }
+
+        //    // Load the args into memory.
+        //    if (programArguments != null)
+        //    {
+        //        int argIndex = 3;
+        //        foreach (var arg in programArguments)
+        //        {
+        //            _memory[argIndex] = int.Parse(arg);
+        //            argIndex++;
+        //        }
+        //    }
+        //}
+
+
+        public InstructionOperands FetchInstrucitonOperands(long memoryLocation)
         {
-            return new InstructionOperands() { OperandA = _memory[memoryLocation], OperandB = _memory[memoryLocation + 1], OperandC = _memory[memoryLocation + 2] };
+            //TODO_x64: Need to implement a bit converter that can processes 64 bit addresses.
+
+            long operandA = BitConverter.ToInt64(_memory, (int)memoryLocation);
+            long operandB = BitConverter.ToInt64(_memory, (int)memoryLocation+8);
+            long operandC = BitConverter.ToInt64(_memory, (int)memoryLocation+16);
+
+            return new InstructionOperands() { OperandA = operandA, OperandB = operandB, OperandC = operandC};
         }
 
-        public int[] ReadDataRange(int rangeStart, int rangeLength)
+        public byte[] ReadDataRange(long rangeStart, long rangeLength)
         {
-            return _memory.Skip(rangeStart).Take(rangeLength).ToArray();
+            byte[] dataRange = new byte[rangeLength];
+            Array.Copy(_memory, rangeStart, dataRange, 0, rangeLength);
+            return dataRange;
         }
         
-        public int ReadData(int memoryLocation)
+        public long ReadData(long memoryLocation)
         {
-            return _memory[memoryLocation];
+            //TODO_x64: Need to implement a bit converter that can processes 64 bit addresses.
+            long dataValue = BitConverter.ToInt64(_memory, (int)memoryLocation);
+            return dataValue;
         }
 
-        public void WriteData(int memoryLocation, int value)
+        public void WriteData(long memoryLocation, long value)
         {
-            _memory[memoryLocation] = value;
+            byte[] valueToWrite = BitConverter.GetBytes(value);
+            Array.Copy(valueToWrite, 0, _memory, memoryLocation, valueToWrite.Length);
         }
 
         [Conditional("DEBUG")]
