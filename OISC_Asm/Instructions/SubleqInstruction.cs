@@ -49,6 +49,11 @@ namespace OISC_Compiler.Instructions
                 byte[] op_c_bin = BitConverter.GetBytes(this.BranchDestination.BinaryAddress);
                 Array.Copy(op_c_bin, 0, instructionBinary, (64 / 8) * 2, 64 / 8);
             }
+            else 
+            {
+                byte[] terminate_bin = BitConverter.GetBytes((long)-1);
+                Array.Copy(terminate_bin, 0, instructionBinary, (64 / 8) * 2, 64 / 8);
+            }
 
             return instructionBinary;
         }
