@@ -16,11 +16,28 @@ namespace OISC_Compiler.Instructions
             }
             else
             {
-                String[] instructionDate = sourceLine.Split(' ');
-                String operand_a = instructionDate[0];
-                String operand_b = instructionDate[1];
-                String operand_c = instructionDate[2];
-                return new SubleqInstruction(sourceLine, sourceLineNumber, sourceAddress, operand_a, operand_b, operand_c);
+                String[] instructionDate = sourceLine.Trim().Split(' ');
+
+                String sourceLabel = String.Empty;
+                String operand_a = String.Empty;
+                String operand_b = String.Empty;
+                String operand_c = String.Empty;
+
+                if (instructionDate[0].EndsWith(LexicalSymbols.Label))
+                {
+                    sourceLabel = instructionDate[0].Replace(LexicalSymbols.Label, String.Empty);
+                    operand_a = instructionDate[1];
+                    operand_b = instructionDate[2];
+                    operand_c = instructionDate[3];
+
+                }
+                else
+                {
+                    operand_a = instructionDate[0];
+                    operand_b = instructionDate[1];
+                    operand_c = instructionDate[2];
+                }
+                return new SubleqInstruction(sourceLine, sourceLineNumber, sourceAddress, sourceLabel, operand_a, operand_b, operand_c);
             }
         }
     }

@@ -56,6 +56,7 @@ namespace OISC_Compiler
             // starting address.
             List<Instruction> sourceList = new List<Instruction>();
             Dictionary<int, ExecutableInstruction> instructionDictionary = new Dictionary<int, ExecutableInstruction>();
+            Dictionary<String, ExecutableInstruction> labeledInstructionDictionary = new Dictionary<string, ExecutableInstruction>();
             int instructionSourceAddress = 0;
             int instructionSourceLineNumber = 0;
 
@@ -68,6 +69,13 @@ namespace OISC_Compiler
                 if (executableInstruction != null)
                 {
                     instructionDictionary.Add(instructionSourceAddress, executableInstruction);
+
+                    // If the instruction has a label, store a mapping so we can resolve labeled branches later.
+                    if (!String.IsNullOrEmpty(executableInstruction.SourceLabel))
+                    {
+                        labeledInstructionDictionary.Add(executableInstruction.SourceLabel, executableInstruction);
+                    }
+
                     instructionSourceAddress += executableInstruction.SourceAddressLength;
                 }
                 sourceList.Add(sourceInstruction);
@@ -83,7 +91,7 @@ namespace OISC_Compiler
                 IBranchingInstruction branchingInstruction = instruction.Value as IBranchingInstruction;
                 if (branchingInstruction != null)
                 {
-                    branchingInstruction.MapBranchAddress(instructionDictionary);
+                    branchingInstruction.MapBranchAddress(instructionDictionary, labeledInstructionDictionary);
                 }
             }
 

@@ -15,7 +15,12 @@ namespace OISC_Compiler.Instructions
         public override long BinaryAddressLength { get { return (64*3)/8; } }
 
         public SubleqInstruction(String sourceLine, int sourceLineNumber, int sourceAddress, String operand_a, String operand_b, String operand_c)
-            : base(sourceLine, sourceLineNumber, operand_c)
+            : this(sourceLine, sourceLineNumber, sourceAddress, String.Empty, operand_a, operand_b, operand_c)
+        {
+
+        }
+        public SubleqInstruction(String sourceLine, int sourceLineNumber, int sourceAddress, String sourceLabel, String operand_a, String operand_b, String operand_c)
+            : base(sourceLine, sourceLineNumber, sourceLabel, operand_c)
         {
             this.Operand_a = operand_a;
             this.Operand_b = operand_b;
