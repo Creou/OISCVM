@@ -32,6 +32,12 @@ namespace OISC_Compiler.Instructions
                             String operand_c = instructionData[3];
                             return new SubleqInstruction(trimmedSourceLine, sourceLineNumber, sourceAddress, sourceLabel, operand_a, operand_b, operand_c);
                         }
+                        if (instructionData.Length == 3)
+                        {
+                            String operand_a = instructionData[1];
+                            String operand_b = instructionData[2];
+                            return new SubleqInstruction(trimmedSourceLine, sourceLineNumber, sourceAddress, sourceLabel, operand_a, operand_b, true);
+                        }
                         else if (instructionData.Length == 2)
                         {
                             String initialValue = instructionData[1];
@@ -51,6 +57,12 @@ namespace OISC_Compiler.Instructions
                             String operand_b = instructionData[1];
                             String operand_c = instructionData[2];
                             return new SubleqInstruction(trimmedSourceLine, sourceLineNumber, sourceAddress, operand_a, operand_b, operand_c);
+                        }
+                        if (instructionData.Length == 2)
+                        {
+                            String operand_a = instructionData[0];
+                            String operand_b = instructionData[1];
+                            return new SubleqInstruction(trimmedSourceLine, sourceLineNumber, sourceAddress, operand_a, operand_b, true);
                         }
                         else
                         {

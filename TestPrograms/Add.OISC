@@ -9,12 +9,12 @@ Arg2:      0
 Zero:      0
 
 // Add first two arguements (addresses 3 & 4).
-ProgStart: $Arg1 $Zero 9
-           $Zero $Arg2 12
-           $Zero $Zero 15
+ProgStart: $Arg1 $Zero
+           $Zero $Arg2
+           $Zero $Zero
 
 // Move the result (from address 4) To the mapped console (address 245-255)
-           30 30 18
-           $Arg2 $Zero 21
-           $Zero 30 24
+           30 30
+           $Arg2 $Zero
+           $Zero 30
            $Zero $Zero -1
