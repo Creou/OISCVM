@@ -1,15 +1,18 @@
 // Jump to program start
            0 0 $ProgStart
+
 // Leave memory space free for arguments and 0 value.
 // 2 arguments: addresses 3 & 4
 // 0 value: address 5
 Arg1:      0
 Arg2:      0
 Zero:      0
+
 // Add first two arguements (addresses 3 & 4).
 ProgStart: $Arg1 $Zero 9
            $Zero $Arg2 12
            $Zero $Zero 15
+
 // Move the result (from address 4) To the mapped console (address 245-255)
            30 30 18
            $Arg2 $Zero 21

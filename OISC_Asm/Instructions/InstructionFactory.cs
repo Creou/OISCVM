@@ -9,52 +9,60 @@ namespace OISC_Compiler.Instructions
     {
         public Instruction GenerateInstruction(String sourceLine, int sourceLineNumber, int sourceAddress)
         {
-            if (sourceLine.StartsWith("//"))
-            {
-                // This source line is a comment.
-                return new CommentInstruction(sourceLine, sourceLineNumber);
-            }
-            else
-            {
-                String[] instructionData = sourceLine.Trim().RemoveMultipleSpaces().Split(' ');
+            String trimmedSourceLine = sourceLine.Trim().RemoveMultipleSpaces();
 
-                if (instructionData[0].EndsWith(LexicalSymbols.Label))
+            if (!String.IsNullOrEmpty(trimmedSourceLine))
+            {
+                if (trimmedSourceLine.StartsWith("//"))
                 {
-                    String sourceLabel = instructionData[0].Replace(LexicalSymbols.Label, String.Empty);
-                    if (instructionData.Length == 4)
-                    {
-                        String operand_a = instructionData[1];
-                        String operand_b = instructionData[2];
-                        String operand_c = instructionData[3];
-                        return new SubleqInstruction(sourceLine, sourceLineNumber, sourceAddress, sourceLabel, operand_a, operand_b, operand_c);
-                    }
-                    else if (instructionData.Length == 2)
-                    {
-                        String initialValue = instructionData[1];
-                        return new AddressableMemoryInstruction(sourceLine, sourceLineNumber, sourceLabel, initialValue);
-                    }
-                    else 
-                    {
-                        //TODO: Need to handle invalid source code.
-                        return null;
-                    }
+                    // This source line is a comment.
+                    return new CommentInstruction(trimmedSourceLine, sourceLineNumber);
                 }
                 else
                 {
-                    if (instructionData.Length == 3)
+                    String[] instructionData = trimmedSourceLine.Split(' ');
+
+                    if (instructionData[0].EndsWith(LexicalSymbols.Label))
                     {
-                        String operand_a = instructionData[0];
-                        String operand_b = instructionData[1];
-                        String operand_c = instructionData[2];
-                        return new SubleqInstruction(sourceLine, sourceLineNumber, sourceAddress, operand_a, operand_b, operand_c);
+                        String sourceLabel = instructionData[0].Replace(LexicalSymbols.Label, String.Empty);
+                        if (instructionData.Length == 4)
+                        {
+                            String operand_a = instructionData[1];
+                            String operand_b = instructionData[2];
+                            String operand_c = instructionData[3];
+                            return new SubleqInstruction(trimmedSourceLine, sourceLineNumber, sourceAddress, sourceLabel, operand_a, operand_b, operand_c);
+                        }
+                        else if (instructionData.Length == 2)
+                        {
+                            String initialValue = instructionData[1];
+                            return new AddressableMemoryInstruction(trimmedSourceLine, sourceLineNumber, sourceLabel, initialValue);
+                        }
+                        else
+                        {
+                            //TODO: Need to handle invalid source code.
+                            return null;
+                        }
                     }
                     else
                     {
-                        //TODO: Need to handle invalid source code.
-                        return null;
+                        if (instructionData.Length == 3)
+                        {
+                            String operand_a = instructionData[0];
+                            String operand_b = instructionData[1];
+                            String operand_c = instructionData[2];
+                            return new SubleqInstruction(trimmedSourceLine, sourceLineNumber, sourceAddress, operand_a, operand_b, operand_c);
+                        }
+                        else
+                        {
+                            //TODO: Need to handle invalid source code.
+                            return null;
+                        }
                     }
                 }
-                
+            }
+            else
+            {
+                return null;
             }
         }
     }

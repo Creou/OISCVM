@@ -65,23 +65,26 @@ namespace OISC_Compiler
             {
                 Instruction sourceInstruction = instructionParser.GenerateInstruction(sourceLine, instructionSourceLineNumber, instructionSourceAddress);
 
-                AddressableInstruction addressableInstruction = sourceInstruction as AddressableInstruction;
-                if (addressableInstruction != null)
+                if (sourceInstruction != null)
                 {
-                    instructionDictionary.Add(instructionSourceAddress, addressableInstruction);
-
-                    // If the instruction has a label, store a mapping so we can resolve labeled branches later.
-                    if (!String.IsNullOrEmpty(addressableInstruction.SourceLabel))
+                    AddressableInstruction addressableInstruction = sourceInstruction as AddressableInstruction;
+                    if (addressableInstruction != null)
                     {
-                        labeledInstructionDictionary.Add(addressableInstruction.SourceLabel, addressableInstruction);
+                        instructionDictionary.Add(instructionSourceAddress, addressableInstruction);
+
+                        // If the instruction has a label, store a mapping so we can resolve labeled branches later.
+                        if (!String.IsNullOrEmpty(addressableInstruction.SourceLabel))
+                        {
+                            labeledInstructionDictionary.Add(addressableInstruction.SourceLabel, addressableInstruction);
+                        }
+
+                        instructionSourceAddress += addressableInstruction.SourceAddressLength;
                     }
 
-                    instructionSourceAddress += addressableInstruction.SourceAddressLength;
+                    sourceList.Add(sourceInstruction);
+
+                    instructionSourceLineNumber++;
                 }
-
-                sourceList.Add(sourceInstruction);
-
-                instructionSourceLineNumber++;
             }
 
             // Loop through each instruction and map each branch address to the destination instruction.
