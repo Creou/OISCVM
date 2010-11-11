@@ -5,12 +5,6 @@ using System.Text;
 
 namespace OISC_Compiler.Instructions
 {
-    public static class LexicalSymbols
-    {
-        public  const String LabelAddress = "$";
-        public const String Label = ":";
-    }
-
     public abstract class BranchingInstruction : ExecutableInstruction, IBranchingInstruction
     {
         public int BranchSourceAddress { get; set; }
@@ -40,18 +34,18 @@ namespace OISC_Compiler.Instructions
             this.BranchDestination = destinationInstruction;
         }
 
-        public void MapBranchAddress(IDictionary<int, ExecutableInstruction> instructionDictionary, IDictionary<String, ExecutableInstruction> labeledInstructionDictionary)
+        public void MapBranchAddress(IDictionary<int, AddressableInstruction> instructionDictionary, IDictionary<String, AddressableInstruction> labeledInstructionDictionary)
         {
             if (!String.IsNullOrEmpty(this.BranchSourceLabel))
             {
                 // If the branch is a label, resolve the labeled instruction...
-                ExecutableInstruction destinationInstruction = labeledInstructionDictionary[this.BranchSourceLabel];
+                ExecutableInstruction destinationInstruction = labeledInstructionDictionary[this.BranchSourceLabel] as ExecutableInstruction;
                 this.MapBranchAddress(destinationInstruction);
             }
             else if (this.BranchSourceAddress != -1)
             {
                 // ...Otherwise, resolve the destination from the branch source address.
-                ExecutableInstruction destinationInstruction = instructionDictionary[this.BranchSourceAddress];
+                ExecutableInstruction destinationInstruction = instructionDictionary[this.BranchSourceAddress] as ExecutableInstruction;
                 this.MapBranchAddress(destinationInstruction);
             }
 

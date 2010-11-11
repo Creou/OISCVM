@@ -22,11 +22,11 @@ namespace OISC_Compiler
 
         public byte[] Assemble()
         {
-            ICollection<ExecutableInstruction> sourceTree = ParseSource();
+            ICollection<AddressableInstruction> sourceTree = ParseSource();
             
             // Resolve the binary addresses for each instruction.
             Int64 currentBinaryAddress = 0;
-            foreach (ExecutableInstruction instruction in sourceTree)
+            foreach (AddressableInstruction instruction in sourceTree)
             {
                 instruction.SetBinaryAddress(currentBinaryAddress);
                 currentBinaryAddress += instruction.BinaryAddressLength;
@@ -37,7 +37,7 @@ namespace OISC_Compiler
             byte[] binary = new byte[currentBinaryAddress];
 
             // Assemble the binary for each instruction and store it in the array.
-            foreach (ExecutableInstruction instruction in sourceTree)
+            foreach (AddressableInstruction instruction in sourceTree)
             {
                 byte[] instructionBinary = instruction.AssembleBinary();
                 Array.Copy(instructionBinary, 0, binary, instruction.BinaryAddress, instruction.BinaryAddressLength);
@@ -46,7 +46,7 @@ namespace OISC_Compiler
             return binary;
         }
 
-        private ICollection<ExecutableInstruction> ParseSource()
+        private ICollection<AddressableInstruction> ParseSource()
         {
             InstructionFactory instructionParser = new InstructionFactory();
 
@@ -55,8 +55,8 @@ namespace OISC_Compiler
             // of executable instructions, indexed by their source
             // starting address.
             List<Instruction> sourceList = new List<Instruction>();
-            Dictionary<int, ExecutableInstruction> instructionDictionary = new Dictionary<int, ExecutableInstruction>();
-            Dictionary<String, ExecutableInstruction> labeledInstructionDictionary = new Dictionary<string, ExecutableInstruction>();
+            Dictionary<int, AddressableInstruction> instructionDictionary = new Dictionary<int, AddressableInstruction>();
+            Dictionary<String, AddressableInstruction> labeledInstructionDictionary = new Dictionary<string, AddressableInstruction>();
             int instructionSourceAddress = 0;
             int instructionSourceLineNumber = 0;
 
@@ -65,19 +65,20 @@ namespace OISC_Compiler
             {
                 Instruction sourceInstruction = instructionParser.GenerateInstruction(sourceLine, instructionSourceLineNumber, instructionSourceAddress);
 
-                ExecutableInstruction executableInstruction = sourceInstruction as ExecutableInstruction;
-                if (executableInstruction != null)
+                AddressableInstruction addressableInstruction = sourceInstruction as AddressableInstruction;
+                if (addressableInstruction != null)
                 {
-                    instructionDictionary.Add(instructionSourceAddress, executableInstruction);
+                    instructionDictionary.Add(instructionSourceAddress, addressableInstruction);
 
                     // If the instruction has a label, store a mapping so we can resolve labeled branches later.
-                    if (!String.IsNullOrEmpty(executableInstruction.SourceLabel))
+                    if (!String.IsNullOrEmpty(addressableInstruction.SourceLabel))
                     {
-                        labeledInstructionDictionary.Add(executableInstruction.SourceLabel, executableInstruction);
+                        labeledInstructionDictionary.Add(addressableInstruction.SourceLabel, addressableInstruction);
                     }
 
-                    instructionSourceAddress += executableInstruction.SourceAddressLength;
+                    instructionSourceAddress += addressableInstruction.SourceAddressLength;
                 }
+
                 sourceList.Add(sourceInstruction);
 
                 instructionSourceLineNumber++;
@@ -92,6 +93,12 @@ namespace OISC_Compiler
                 if (branchingInstruction != null)
                 {
                     branchingInstruction.MapBranchAddress(instructionDictionary, labeledInstructionDictionary);
+                }
+
+                IAddressedOperands addressedOperandsInstruction = instruction.Value as IAddressedOperands;
+                if (addressedOperandsInstruction != null)
+                {
+                    addressedOperandsInstruction.MapAddressedOperands(instructionDictionary, labeledInstructionDictionary);
                 }
             }
 

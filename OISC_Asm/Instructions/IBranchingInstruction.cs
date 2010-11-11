@@ -11,6 +11,6 @@ namespace OISC_Compiler.Instructions
         String BranchSourceLabel { get; set; }
         ExecutableInstruction BranchDestination { get; set; }
 
-        void MapBranchAddress(IDictionary<int, ExecutableInstruction> instructionDictionary, IDictionary<String, ExecutableInstruction> labeledInstructionDictionary);
+        void MapBranchAddress(IDictionary<int, AddressableInstruction> instructionDictionary, IDictionary<String, AddressableInstruction> labeledInstructionDictionary);
     }
 }

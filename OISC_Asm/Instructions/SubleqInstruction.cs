@@ -5,11 +5,14 @@ using System.Text;
 
 namespace OISC_Compiler.Instructions
 {
-    public class SubleqInstruction : BranchingInstruction
+    public class SubleqInstruction : BranchingInstruction, IAddressedOperands
     {
         public String Operand_a { get; private set; }
         public String Operand_b { get; private set; }
         public String Operand_c { get; private set; }
+
+        public AddressableMemoryInstruction Operand_a_Address{get; private set;}
+        public AddressableMemoryInstruction Operand_b_Address{get; private set;}
 
         public override int SourceAddressLength { get { return 3; } }
         public override long BinaryAddressLength { get { return (64*3)/8; } }
@@ -29,16 +32,58 @@ namespace OISC_Compiler.Instructions
             this.SourceAddress = sourceAddress;
         }
 
+        public void MapAddressedOperands(Dictionary<int, AddressableInstruction> instructionDictionary, Dictionary<string, AddressableInstruction> labeledInstructionDictionary)
+        {
+            Operand_a_Address = MapAddressedOperands(labeledInstructionDictionary, Operand_a);
+            Operand_b_Address = MapAddressedOperands(labeledInstructionDictionary, Operand_b);
+        }
+
+        private AddressableMemoryInstruction MapAddressedOperands(Dictionary<string, AddressableInstruction> labeledInstructionDictionary, String operand_Value)
+        {
+            if (operand_Value.StartsWith(LexicalSymbols.LabelAddress))
+            {
+                String label = operand_Value.Replace(LexicalSymbols.LabelAddress, String.Empty);
+                if (labeledInstructionDictionary.ContainsKey(label))
+                {
+                    return labeledInstructionDictionary[label] as AddressableMemoryInstruction;
+                }
+                else
+                {
+                    //TODO: Handle source syntax errors.
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public override byte[] AssembleBinary()
         {
-            // Parse the operand addresses into binary values.
-            long op_a = long.Parse(Operand_a);
-            long op_b = long.Parse(Operand_b);
+            long op_a;
+            if (Operand_a_Address != null)
+            {
+                op_a = Operand_a_Address.BinaryAddress;
+            }
+            else
+            {
+                // We have to multiple the addresses by 24 because 
+                // each source address represents a 64bit(8 byte) value.
+                op_a = long.Parse(Operand_a);
+                op_a *= 8;
+            }
 
-            // We have to multiple the addresses by 24 because 
-            // each source address represents a 64bit(8 byte) value.
-            op_a *= 8;
-            op_b *= 8;
+            long op_b;
+            if (Operand_b_Address != null)
+            {
+                op_b = Operand_b_Address.BinaryAddress;
+            }
+            else
+            {
+                op_b = long.Parse(Operand_b);
+                op_b *= 8;
+            }
 
             byte[] op_a_bin = BitConverter.GetBytes(op_a);
             byte[] op_b_bin = BitConverter.GetBytes(op_b);
@@ -54,7 +99,7 @@ namespace OISC_Compiler.Instructions
                 byte[] op_c_bin = BitConverter.GetBytes(this.BranchDestination.BinaryAddress);
                 Array.Copy(op_c_bin, 0, instructionBinary, (64 / 8) * 2, 64 / 8);
             }
-            else 
+            else
             {
                 byte[] terminate_bin = BitConverter.GetBytes((long)-1);
                 Array.Copy(terminate_bin, 0, instructionBinary, (64 / 8) * 2, 64 / 8);
@@ -62,5 +107,6 @@ namespace OISC_Compiler.Instructions
 
             return instructionBinary;
         }
+
     }
 }
