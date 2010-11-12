@@ -14,8 +14,8 @@ namespace OISC_Compiler.Instructions
         public AddressableMemoryInstruction Operand_a_Address{get; private set;}
         public AddressableMemoryInstruction Operand_b_Address{get; private set;}
 
-        public override int SourceAddressLength { get { return 3; } }
-        public override long BinaryAddressLength { get { return (64*3)/8; } }
+        public override int SourceLength { get { return 3; } }
+        public override long BinaryLength { get { return (64*3)/8; } }
 
         public SubleqInstruction(String sourceLine, int sourceLineNumber, int sourceAddress, Address operand_a, Address operand_b, bool autoBranchNext)
             : this(sourceLine, sourceLineNumber, sourceAddress, String.Empty, operand_a, operand_b, null, autoBranchNext)
@@ -37,13 +37,11 @@ namespace OISC_Compiler.Instructions
         }
 
         public SubleqInstruction(String sourceLine, int sourceLineNumber, int sourceAddress, String sourceLabel, Address operand_a, Address operand_b, Address operand_c, bool autoBranchNext)
-            : base(sourceLine, sourceLineNumber, sourceLabel, operand_c, autoBranchNext)
+            : base(sourceLine, sourceLineNumber, sourceAddress, sourceLabel, operand_c, autoBranchNext)
         {
             this.Operand_a = operand_a;
             this.Operand_b = operand_b;
             this.Operand_c = operand_c;
-
-            this.SourceAddress = sourceAddress;
         }
 
         public void MapAddressedOperands(Dictionary<int, AddressableInstruction> instructionDictionary, Dictionary<string, AddressableInstruction> labeledInstructionDictionary)
@@ -56,9 +54,9 @@ namespace OISC_Compiler.Instructions
         {
             if (operand_Value.IsLabelledAddress)
             {
-                if (labeledInstructionDictionary.ContainsKey(operand_Value.LabelledAddress))
+                if (labeledInstructionDictionary.ContainsKey(operand_Value.AddressLabel))
                 {
-                    return labeledInstructionDictionary[operand_Value.LabelledAddress] as AddressableMemoryInstruction;
+                    return labeledInstructionDictionary[operand_Value.AddressLabel] as AddressableMemoryInstruction;
                 }
                 else
                 {
@@ -77,7 +75,7 @@ namespace OISC_Compiler.Instructions
             long op_a;
             if (Operand_a_Address != null)
             {
-                op_a = Operand_a_Address.BinaryAddress;
+                op_a = Operand_a_Address.Address.BinaryAddress;
             }
             else
             {
@@ -89,7 +87,7 @@ namespace OISC_Compiler.Instructions
             long op_b;
             if (Operand_b_Address != null)
             {
-                op_b = Operand_b_Address.BinaryAddress;
+                op_b = Operand_b_Address.Address.BinaryAddress;
             }
             else
             {
@@ -100,14 +98,14 @@ namespace OISC_Compiler.Instructions
             byte[] op_b_bin = BitConverter.GetBytes(op_b);
 
             // Copy the binary into a single array for the instruction.
-            byte[] instructionBinary = new byte[BinaryAddressLength];
+            byte[] instructionBinary = new byte[BinaryLength];
             Array.Copy(op_a_bin, 0, instructionBinary, 0, 64 / 8);
             Array.Copy(op_b_bin, 0, instructionBinary, (64 / 8), 64 / 8);
 
             // Check for the branch destination address and copy the binary for that address too.
             if (this.BranchDestination != null)
             {
-                byte[] op_c_bin = BitConverter.GetBytes(this.BranchDestination.BinaryAddress);
+                byte[] op_c_bin = BitConverter.GetBytes(this.BranchDestination.Address.BinaryAddress);
                 Array.Copy(op_c_bin, 0, instructionBinary, (64 / 8) * 2, 64 / 8);
             }
             else

@@ -7,27 +7,21 @@ namespace OISC_Compiler.Instructions
 {
     public abstract class AddressableInstruction : Instruction
     {
-        public abstract int SourceAddressLength { get; }
-        public int SourceAddress { get; protected set; }
-        public string SourceLabel { get; set; }
+        public abstract int SourceLength { get; }
+        public abstract long BinaryLength { get; }
 
-        public long BinaryAddress { get; set; }
-        public abstract long BinaryAddressLength { get; }
+        public Address Address { get; private set; }
 
-        public AddressableInstruction(String sourceLine, int sourceLineNumber)
-            : this(sourceLine, sourceLineNumber, String.Empty)
+
+        public AddressableInstruction(String sourceLine, int sourceLineNumber, int sourceAddress)
+            : this(sourceLine, sourceLineNumber, sourceAddress, String.Empty)
         {
         }
 
-        public AddressableInstruction(String sourceLine, int sourceLineNumber, String sourceLabel)
+        public AddressableInstruction(String sourceLine, int sourceLineNumber, int sourceAddress, String sourceLabel)
             : base(sourceLine, sourceLineNumber)
         {
-            this.SourceLabel = sourceLabel;
-        }
-
-        internal void SetBinaryAddress(long binaryAddress)
-        {
-            this.BinaryAddress = binaryAddress;
+            this.Address = new Address(sourceAddress, sourceLabel);
         }
 
         public abstract byte[] AssembleBinary();

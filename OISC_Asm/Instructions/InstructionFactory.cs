@@ -41,7 +41,7 @@ namespace OISC_Compiler.Instructions
                         else if (instructionData.Length == 2)
                         {
                             String initialValue = instructionData[1];
-                            return new AddressableMemoryInstruction(trimmedSourceLine, sourceLineNumber, sourceLabel, initialValue);
+                            return new AddressableMemoryInstruction(trimmedSourceLine, sourceLineNumber, sourceAddress, sourceLabel, initialValue);
                         }
                         else
                         {

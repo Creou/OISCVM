@@ -24,23 +24,18 @@ namespace OISC_Compiler
         {
             ICollection<AddressableInstruction> sourceTree = ParseSource();
             
-            // Resolve the binary addresses for each instruction.
-            Int64 currentBinaryAddress = 0;
-            foreach (AddressableInstruction instruction in sourceTree)
-            {
-                instruction.SetBinaryAddress(currentBinaryAddress);
-                currentBinaryAddress += instruction.BinaryAddressLength;
-            }
+            AddressableInstruction lastInstruction = sourceTree.Last();
+            long binarySize = lastInstruction.Address.BinaryAddress + lastInstruction.BinaryLength;
 
             // Create an array of the required size to hold the binary data.
             // Size is taken from the final binary address used.
-            byte[] binary = new byte[currentBinaryAddress];
+            byte[] binary = new byte[binarySize];
 
             // Assemble the binary for each instruction and store it in the array.
             foreach (AddressableInstruction instruction in sourceTree)
             {
                 byte[] instructionBinary = instruction.AssembleBinary();
-                Array.Copy(instructionBinary, 0, binary, instruction.BinaryAddress, instruction.BinaryAddressLength);
+                Array.Copy(instructionBinary, 0, binary, instruction.Address.BinaryAddress, instruction.BinaryLength);
             }
 
             return binary;
@@ -73,12 +68,12 @@ namespace OISC_Compiler
                         instructionDictionary.Add(instructionSourceAddress, addressableInstruction);
 
                         // If the instruction has a label, store a mapping so we can resolve labeled branches later.
-                        if (!String.IsNullOrEmpty(addressableInstruction.SourceLabel))
+                        if (!String.IsNullOrEmpty(addressableInstruction.Address.AddressLabel))
                         {
-                            labeledInstructionDictionary.Add(addressableInstruction.SourceLabel, addressableInstruction);
+                            labeledInstructionDictionary.Add(addressableInstruction.Address.AddressLabel, addressableInstruction);
                         }
 
-                        instructionSourceAddress += addressableInstruction.SourceAddressLength;
+                        instructionSourceAddress += addressableInstruction.SourceLength;
                     }
 
                     sourceList.Add(sourceInstruction);

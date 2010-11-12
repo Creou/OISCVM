@@ -11,13 +11,13 @@ namespace OISC_Compiler.Instructions
         public ExecutableInstruction BranchDestination { get; set; }
         public bool AutoBranchNext { get; private set; }
 
-        public BranchingInstruction(String sourceLine, int sourceLineNumber, Address operand_branch)
-            : this(sourceLine, sourceLineNumber, String.Empty, operand_branch, false)
+        public BranchingInstruction(String sourceLine, int sourceLineNumber, int sourceAddress, Address operand_branch)
+            : this(sourceLine, sourceLineNumber, sourceAddress, String.Empty, operand_branch, false)
         {
         }
 
-        public BranchingInstruction(String sourceLine, int sourceLineNumber, String sourceLabel, Address operand_branch, bool autoBranchNext)
-            : base(sourceLine, sourceLineNumber, sourceLabel)
+        public BranchingInstruction(String sourceLine, int sourceLineNumber, int sourceAddress, String sourceLabel, Address operand_branch, bool autoBranchNext)
+            : base(sourceLine, sourceLineNumber, sourceAddress, sourceLabel)
         {
             this.AutoBranchNext = autoBranchNext;
             this.BranchAddress = operand_branch;
@@ -33,7 +33,7 @@ namespace OISC_Compiler.Instructions
             if (this.AutoBranchNext)
             {
                 // Auto branch instructions just need to branch to the next instruction in the source code.
-                int nextInstructionSourceAddress = this.SourceAddress + this.SourceAddressLength;
+                int nextInstructionSourceAddress = this.Address.SourceAddress + this.SourceLength;
                 ExecutableInstruction destinationInstruction = instructionDictionary[nextInstructionSourceAddress] as ExecutableInstruction;
                 this.MapBranchAddress(destinationInstruction);
             }
@@ -42,7 +42,7 @@ namespace OISC_Compiler.Instructions
                 if (this.BranchAddress.IsLabelledAddress)
                 {
                     // If the branch is a label, resolve the labeled instruction...
-                    ExecutableInstruction destinationInstruction = labeledInstructionDictionary[this.BranchAddress.LabelledAddress] as ExecutableInstruction;
+                    ExecutableInstruction destinationInstruction = labeledInstructionDictionary[this.BranchAddress.AddressLabel] as ExecutableInstruction;
                     this.MapBranchAddress(destinationInstruction);
                 }
                 else if (this.BranchAddress.SourceAddress != -1)
