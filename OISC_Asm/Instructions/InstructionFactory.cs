@@ -27,6 +27,7 @@ namespace OISC_Compiler.Instructions
                         String sourceLabel = instructionData[0].Replace(LexicalSymbols.Label, String.Empty);
                         if (instructionData.Length == 4)
                         {
+                            // Labeled subleq instruction.
                             Address operand_a = new Address(instructionData[1]);
                             Address operand_b = new Address(instructionData[2]);
                             Address operand_c =new Address( instructionData[3]);
@@ -34,12 +35,14 @@ namespace OISC_Compiler.Instructions
                         }
                         if (instructionData.Length == 3)
                         {
+                            // Labeled subleq instruction with auto branch next.
                             Address operand_a = new Address( instructionData[1]);
                             Address operand_b = new Address( instructionData[2]);
                             return new SubleqInstruction(trimmedSourceLine, sourceLineNumber, sourceAddress, sourceLabel, operand_a, operand_b, true);
                         }
                         else if (instructionData.Length == 2)
                         {
+                            // Labeled memory value.
                             String initialValue = instructionData[1];
                             return new AddressableMemoryInstruction(trimmedSourceLine, sourceLineNumber, sourceAddress, sourceLabel, initialValue);
                         }
@@ -53,6 +56,7 @@ namespace OISC_Compiler.Instructions
                     {
                         if (instructionData.Length == 3)
                         {
+                            // Unlabeled subleq instruction.
                             Address operand_a = new Address( instructionData[0]);
                             Address operand_b = new Address( instructionData[1]);
                             Address operand_c = new Address( instructionData[2]);
@@ -60,6 +64,7 @@ namespace OISC_Compiler.Instructions
                         }
                         if (instructionData.Length == 2)
                         {
+                            // Unlabeled subleq instruction with auto branch next.
                             Address operand_a = new Address( instructionData[0]);
                             Address operand_b = new Address( instructionData[1]);
                             return new SubleqInstruction(trimmedSourceLine, sourceLineNumber, sourceAddress, operand_a, operand_b, true);
