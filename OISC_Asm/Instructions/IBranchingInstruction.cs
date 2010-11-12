@@ -7,8 +7,7 @@ namespace OISC_Compiler.Instructions
 {
     public interface IBranchingInstruction
     {
-        int BranchSourceAddress { get; set; }
-        String BranchSourceLabel { get; set; }
+        Address BranchAddress { get; set; }
         ExecutableInstruction BranchDestination { get; set; }
 
         void MapBranchAddress(IDictionary<int, AddressableInstruction> instructionDictionary, IDictionary<String, AddressableInstruction> labeledInstructionDictionary);

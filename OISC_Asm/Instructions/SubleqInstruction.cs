@@ -7,36 +7,36 @@ namespace OISC_Compiler.Instructions
 {
     public class SubleqInstruction : BranchingInstruction, IAddressedOperands
     {
-        public String Operand_a { get; private set; }
-        public String Operand_b { get; private set; }
-        public String Operand_c { get; private set; }
+        public Address Operand_a { get; private set; }
+        public Address Operand_b { get; private set; }
+        public Address Operand_c { get; private set; }
 
         public AddressableMemoryInstruction Operand_a_Address{get; private set;}
         public AddressableMemoryInstruction Operand_b_Address{get; private set;}
 
         public override int SourceAddressLength { get { return 3; } }
         public override long BinaryAddressLength { get { return (64*3)/8; } }
-        
-        public SubleqInstruction(String sourceLine, int sourceLineNumber, int sourceAddress, String operand_a, String operand_b, bool autoBranchNext)
-            : this(sourceLine, sourceLineNumber, sourceAddress, String.Empty, operand_a, operand_b, String.Empty, autoBranchNext)
+
+        public SubleqInstruction(String sourceLine, int sourceLineNumber, int sourceAddress, Address operand_a, Address operand_b, bool autoBranchNext)
+            : this(sourceLine, sourceLineNumber, sourceAddress, String.Empty, operand_a, operand_b, null, autoBranchNext)
         {
         }
-        public SubleqInstruction(String sourceLine, int sourceLineNumber, int sourceAddress, String sourceLabel, String operand_a, String operand_b, bool autoBranchNext)
-            : this(sourceLine, sourceLineNumber, sourceAddress, sourceLabel, operand_a, operand_b, String.Empty, autoBranchNext)
+        public SubleqInstruction(String sourceLine, int sourceLineNumber, int sourceAddress, String sourceLabel, Address operand_a, Address operand_b, bool autoBranchNext)
+            : this(sourceLine, sourceLineNumber, sourceAddress, sourceLabel, operand_a, operand_b, null, autoBranchNext)
         {
         }
 
-        public SubleqInstruction(String sourceLine, int sourceLineNumber, int sourceAddress, String operand_a, String operand_b, String operand_c)
+        public SubleqInstruction(String sourceLine, int sourceLineNumber, int sourceAddress, Address operand_a, Address operand_b, Address operand_c)
             : this(sourceLine, sourceLineNumber, sourceAddress, String.Empty, operand_a, operand_b, operand_c, false)
         {
         }
-        
-        public SubleqInstruction(String sourceLine, int sourceLineNumber, int sourceAddress, String sourceLabel, String operand_a, String operand_b, String operand_c)
+
+        public SubleqInstruction(String sourceLine, int sourceLineNumber, int sourceAddress, String sourceLabel, Address operand_a, Address operand_b, Address operand_c)
             : this(sourceLine, sourceLineNumber, sourceAddress, sourceLabel, operand_a, operand_b, operand_c, false)
         {
         }
-        
-        public SubleqInstruction(String sourceLine, int sourceLineNumber, int sourceAddress, String sourceLabel, String operand_a, String operand_b, String operand_c, bool autoBranchNext)
+
+        public SubleqInstruction(String sourceLine, int sourceLineNumber, int sourceAddress, String sourceLabel, Address operand_a, Address operand_b, Address operand_c, bool autoBranchNext)
             : base(sourceLine, sourceLineNumber, sourceLabel, operand_c, autoBranchNext)
         {
             this.Operand_a = operand_a;
@@ -52,14 +52,13 @@ namespace OISC_Compiler.Instructions
             Operand_b_Address = MapAddressedOperands(labeledInstructionDictionary, Operand_b);
         }
 
-        private AddressableMemoryInstruction MapAddressedOperands(Dictionary<string, AddressableInstruction> labeledInstructionDictionary, String operand_Value)
+        private AddressableMemoryInstruction MapAddressedOperands(Dictionary<string, AddressableInstruction> labeledInstructionDictionary, Address operand_Value)
         {
-            if (operand_Value.StartsWith(LexicalSymbols.LabelAddress))
+            if (operand_Value.IsLabelledAddress)
             {
-                String label = operand_Value.Replace(LexicalSymbols.LabelAddress, String.Empty);
-                if (labeledInstructionDictionary.ContainsKey(label))
+                if (labeledInstructionDictionary.ContainsKey(operand_Value.LabelledAddress))
                 {
-                    return labeledInstructionDictionary[label] as AddressableMemoryInstruction;
+                    return labeledInstructionDictionary[operand_Value.LabelledAddress] as AddressableMemoryInstruction;
                 }
                 else
                 {
@@ -84,8 +83,7 @@ namespace OISC_Compiler.Instructions
             {
                 // We have to multiple the addresses by 24 because 
                 // each source address represents a 64bit(8 byte) value.
-                op_a = long.Parse(Operand_a);
-                op_a *= 8;
+                op_a = Operand_a.BinaryAddress;
             }
 
             long op_b;
@@ -95,8 +93,7 @@ namespace OISC_Compiler.Instructions
             }
             else
             {
-                op_b = long.Parse(Operand_b);
-                op_b *= 8;
+                op_b = Operand_b.BinaryAddress;
             }
 
             byte[] op_a_bin = BitConverter.GetBytes(op_a);

@@ -13,8 +13,8 @@ ProgStart: $Arg1 $Zero
            $Zero $Arg2
            $Zero $Zero
 
-// Move the result (from address 4) To the mapped console (address 245-255)
-           30 30
+// Move the result (from address 4) To the mapped console (address 240-255)
+           #240 #240
            $Arg2 $Zero
-           $Zero 30
+           $Zero #240
            $Zero $Zero -1

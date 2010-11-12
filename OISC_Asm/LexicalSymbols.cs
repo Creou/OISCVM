@@ -9,5 +9,6 @@ namespace OISC_Compiler
     {
         public const String LabelAddress = "$";
         public const String Label = ":";
+        public const String BinaryAddress = "#";
     }
 }

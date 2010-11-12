@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Instructions\Address.cs" />
     <Compile Include="Instructions\AddressableMemoryInstruction.cs" />
     <Compile Include="Instructions\AddressableInstruction.cs" />
     <Compile Include="Instructions\BranchingInstruction.cs" />
