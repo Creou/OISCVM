@@ -27,6 +27,16 @@ namespace OISC_VM
 
         protected abstract void RefreshDevice(byte[] mappedMemory);
 
+        protected void WriteValue(long memoryLocation, long value)
+        {
+            _memoryBus.WriteData(memoryLocation, value);
+        }
+
+        protected long GetValue(long memoryLocation)
+        {
+            return _memoryBus.ReadData(memoryLocation);
+        }
+
 
         public int MemoryRangeStart
         {
@@ -49,12 +59,22 @@ namespace OISC_VM
 
         protected override void RefreshDevice(byte[] mappedMemory)
         {
-            Console.Clear();
-            for (int i = 0; i < mappedMemory.Length; i++)
+            if (OutputFlag()) 
             {
-                Console.Write(mappedMemory[i] + " ");
+                String data = ASCIIEncoding.Default.GetString(mappedMemory, 0, mappedMemory.Length - 8).Replace("\0", String.Empty);
+                Console.Write(data);
+
+                ResetFlag();
             }
-            Console.WriteLine();
+        }
+
+        private void ResetFlag()
+        {
+            WriteValue(MemoryRangeStart + MemoryRangeLength - 8, 0);
+        }
+        private bool OutputFlag()
+        {
+            return GetValue(MemoryRangeStart + MemoryRangeLength - 8) == 127;
         }
     }
 

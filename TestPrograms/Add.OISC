@@ -7,14 +7,29 @@
 Arg1:      0
 Arg2:      0
 Zero:      0
+Flag:      127
+AsciiOff:  48
+Z3:        0
 
-// Add first two arguements (addresses 3 & 4).
+// Add first two arguements.
 ProgStart: $Arg1 $Zero
            $Zero $Arg2
            $Zero $Zero
 
-// Move the result (from address 4) To the mapped console (address 240-255)
+// Add the ascii offset to the result (48).
+           $AsciiOff $Zero
+           $Zero $Arg2
+           $Zero $Zero         
+
+// Move the result to the mapped console (address 1048448-1048576)
            #1048448 #1048448
            $Arg2 $Zero
            $Zero #1048448
+           $Zero $Zero
+
+// Copy the flag to the console to trigger a refresh.
+           #1048568 #1048568
+           $Flag $Zero
+           $Zero #1048568
+
            $Zero $Zero -1

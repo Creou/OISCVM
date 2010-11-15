@@ -26,5 +26,8 @@ This program is Copyright 2010 Simon P Stevens
 TODO:
 
 Input device: Somehow have keyboard input written to memory locations.
-Interupts: User registerable interrupts to run specific code on hardware events (such as keyboard events?)
+Interupts: 
+    Hardware - User registerable interrupts to run specific code on hardware events (such as keyboard events?)
+               Also, registerable by hardware (E.g. Console device could use a memory address to trigger a display update. This could be an interruppted address)
+    Software - Triggered by changes to specific memory addresses. User can register code to be run when address is set to a flag value.
 Disk device: A mapped memory location that can be written to to send commands to a disk controller. Then have the disk controller load the requested memory from disk into main memory. The disk controller could either be for emulated binary disks, or for host disk access.
