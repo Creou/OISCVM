@@ -14,7 +14,8 @@ namespace OISC_VM
 
         public Memory()
         {
-            _memory = new byte[256];
+            // 1,048,576 = 1Mb.
+            _memory = new byte[1048576];
         }
 
         public void LoadProgram(String fileName) 
