@@ -1,12 +1,14 @@
-Simple virtual machine of a "one instruction set" cpu.
+Simple virtual machine of a "one instruction set" cpu written in C#.
 
 Based on the single instruction SUBLEQ (Subtract and 
 branch if less than or equal to 0).
 
-Written in C#.
-
-Loads a program into memory and executes it.
+The virtual machine loads a program into memory and executes it.
 Includes a memory mapped console output device for displaying results.
+
+Project includes an assembler for building binary files from assembly source.
+
+Assembler has support for comment lines, source and binary mode addressing, labeled addressing, labeled memory and auto branching to next instruction.
 
 ===
 
@@ -24,9 +26,5 @@ This program is Copyright 2010 Simon P Stevens
 TODO:
 
 Input device: Somehow have keyboard input written to memory locations.
-
-Compiler:
- - Address labels
- - Menumoic instruction replacement.
-
-Disk device: Have a mapped memory location that can be written to to send commands to a disk controller. Then have the disk controller load the requested memory from disk into main memory. The disk controller could either be for emulated binary disks, or for host disk access.
+Interupts: User registerable interrupts to run specific code on hardware events (such as keyboard events?)
+Disk device: A mapped memory location that can be written to to send commands to a disk controller. Then have the disk controller load the requested memory from disk into main memory. The disk controller could either be for emulated binary disks, or for host disk access.
