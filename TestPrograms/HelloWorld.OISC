@@ -1,0 +1,69 @@
+// Jump to program start
+           0 0 $ProgStart
+
+// Store the ASCII for "Hello World" in labelled memory addresses.
+1:         72
+2:         101
+3:         108
+4:         108
+5:         111
+6:         32
+7:         119
+8:         111
+9:         114
+10:        108
+11:        100
+Zero:      0
+Flag:      127
+
+Move the data into the console mapped memory.
+ProgStart: $1 $Zero
+           $Zero #1048448
+           $Zero $Zero
+
+           $2 $Zero
+           $Zero #1048456
+           $Zero $Zero
+
+           $3 $Zero
+           $Zero #1048464
+           $Zero $Zero
+
+           $4 $Zero
+           $Zero #1048472
+           $Zero $Zero
+
+           $5 $Zero
+           $Zero #1048480
+           $Zero $Zero
+
+           $6 $Zero
+           $Zero #1048488
+           $Zero $Zero
+
+           $7 $Zero
+           $Zero #1048496
+           $Zero $Zero
+
+           $8 $Zero
+           $Zero #1048504
+           $Zero $Zero
+
+           $9 $Zero
+           $Zero #1048512
+           $Zero $Zero
+
+           $10 $Zero
+           $Zero #1048520
+           $Zero $Zero
+
+           $11 $Zero
+           $Zero #1048528
+           $Zero $Zero
+
+// Copy the flag to the console to trigger a refresh.
+           #1048568 #1048568
+           $Flag $Zero
+           $Zero #1048568
+
+           $Zero $Zero -1
