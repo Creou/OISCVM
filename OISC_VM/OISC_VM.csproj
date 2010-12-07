@@ -46,9 +46,11 @@
   <ItemGroup>
     <Compile Include="ConsoleDevice.cs" />
     <Compile Include="Cpu.cs" />
+    <Compile Include="EventSafeTriggerExtensions.cs" />
     <Compile Include="IMemoryBus.cs" />
     <Compile Include="IMemoryMapppedDevice.cs" />
     <Compile Include="InstructionOperands.cs" />
+    <Compile Include="InterruptEventArgs.cs" />
     <Compile Include="Memory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -50,6 +50,7 @@ namespace OISC_VM
             private set;
         }
     }
+
     public class ConsoleDevice : AutoRefreshingMemoryMappedDevice
     {
         public ConsoleDevice(IMemoryBus memoryBus, int memoryRangeStart, int memoryRangeLength, int refreshInterval)
