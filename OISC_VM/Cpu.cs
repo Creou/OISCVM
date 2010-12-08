@@ -33,10 +33,11 @@ namespace OISC_VM
 
         private Memory _memoryBus;
 
-        public CPU(Memory memoryBus)
+        public CPU(Memory memoryBus, InterruptHandler interruptHandler)
         {
             _memoryBus = memoryBus;
-            _memoryBus.SoftwareInterruptTriggered += new EventHandler<InterruptEventArgs>(_memoryBus_InterruptTriggered);
+
+            interruptHandler.SoftwareInterruptTriggered += new EventHandler<InterruptEventArgs>(InterruptHandler_InterruptTriggered);
 
             _interruptReturnAddress = new Stack<long>();
             _interruptJump = new List<SoftwareInterruptRequest>();
@@ -108,7 +109,7 @@ namespace OISC_VM
             }
         }
 
-        void _memoryBus_InterruptTriggered(object sender, InterruptEventArgs e)
+        void InterruptHandler_InterruptTriggered(object sender, InterruptEventArgs e)
         {
             _interruptJump.Add(e.InterruptRequest);
         }

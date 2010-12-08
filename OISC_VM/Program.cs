@@ -26,12 +26,14 @@ namespace OISC_VM
                 _mem.LoadProgram(args[0]);
             }
 
+            InterruptHandler interruptHandler = new InterruptHandler(_mem);
+
             // Create a memory mapped console device.
-            _consoleDevice = new ConsoleDevice(_mem, 1048448, 128, 100);
+            _consoleDevice = new ConsoleDevice(_mem, interruptHandler, 1048448, 128, 100);
 
             // Create the CPU and start it running.
-            _cpu = new CPU(_mem);
-            Thread.Sleep(2000);
+            _cpu = new CPU(_mem, interruptHandler);
+            Thread.Sleep(1000);
             _cpu.Run();
 
             Console.ReadLine();

@@ -46,12 +46,16 @@
   <ItemGroup>
     <Compile Include="ConsoleDevice.cs" />
     <Compile Include="Cpu.cs" />
-    <Compile Include="EventSafeTriggerExtensions.cs" />
+    <Compile Include="Extensions\EventSafeTriggerExtensions.cs" />
+    <Compile Include="HardwareInterruptRequest.cs" />
     <Compile Include="IMemoryBus.cs" />
     <Compile Include="IMemoryMapppedDevice.cs" />
     <Compile Include="InstructionOperands.cs" />
     <Compile Include="InterruptEventArgs.cs" />
+    <Compile Include="InterruptHandler.cs" />
+    <Compile Include="InterruptTriggeredMemoryMappedDevice.cs" />
     <Compile Include="Memory.cs" />
+    <Compile Include="MemoryChangedEventArgs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

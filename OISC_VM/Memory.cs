@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
+using OISC_VM.Extensions;
 
 namespace OISC_VM
 {
@@ -12,15 +13,12 @@ namespace OISC_VM
         // Create the memory.
         byte[] _memory;
 
-        private List<SoftwareInterruptRequest> _softwareIrqList;
-
-        public event EventHandler<InterruptEventArgs> SoftwareInterruptTriggered;
+        public event EventHandler<MemoryChangedEventArgs> MemoryChanged;
 
         public Memory()
         {
             // 1,048,576 = 1Mb.
             _memory = new byte[1048576];
-            _softwareIrqList = new List<SoftwareInterruptRequest>();
         }
 
         public void LoadProgram(String fileName) 
@@ -75,19 +73,28 @@ namespace OISC_VM
 
         public void WriteData(long memoryLocation, long value)
         {
+            WriteData(memoryLocation, value, true);
+        }
+
+        private void WriteData(long memoryLocation, long value, bool notifyMemoryChanged)
+        {
             byte[] valueToWrite = BitConverter.GetBytes(value);
             Array.Copy(valueToWrite, 0, _memory, memoryLocation, valueToWrite.Length);
 
-            // Check for any triggered interrupts.
-            foreach (var irq in _softwareIrqList.Where(irq => irq.InterruptFlagAddress == memoryLocation))
+            if (notifyMemoryChanged)
             {
-                OnSoftwareInterruptTriggered(irq);
+                OnMemoryChanged(memoryLocation, value);
             }
         }
 
-        private void OnSoftwareInterruptTriggered(SoftwareInterruptRequest irq)
+        public void ResetData(long memoryLocation)
         {
-            SoftwareInterruptTriggered.SafeTrigger(this, new InterruptEventArgs(irq));
+            WriteData(memoryLocation, 0, false);
+        }
+
+        private void OnMemoryChanged(long memoryLocation, long value)
+        {
+            MemoryChanged.SafeTrigger(this, new MemoryChangedEventArgs(memoryLocation, value));
         }
 
         [Conditional("DEBUG")]

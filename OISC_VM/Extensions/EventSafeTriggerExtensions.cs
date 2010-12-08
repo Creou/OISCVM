@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-namespace OISC_VM
+
+namespace OISC_VM.Extensions
 {
     /// <summary>
     /// Provides safe trigger extensions for the EventHandler class.
