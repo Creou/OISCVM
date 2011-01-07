@@ -104,17 +104,17 @@ namespace OISC_VM
         [Conditional("DEBUG")]
         internal void DebugWrite()
         {
-            for (int i = 0; i < _memory.Length; i++)
+            for (int i = 0; i < 100;i++)//_memory.Length/8; i++)
             {
-                if (i % 3 == 2)
-                {
-                    Console.WriteLine(_memory[i]);
-                }
-                else
-                {
-                    Console.Write(_memory[i] + " ");
-                }
-
+                Console.WriteLine(ReadData(i*8));
+                //if (i % 8 == 2)
+                //{
+                //    Console.WriteLine(_memory[i]);
+                //}
+                //else
+                //{
+                //    Console.Write(_memory[i] + " ");
+                //}
             }
         }
     }

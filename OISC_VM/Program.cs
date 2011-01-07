@@ -48,7 +48,7 @@ namespace OISC_VM
 
             // Start the keyboard device.
             keyboardDevice.StartDevice();
-
+            _mem.DebugWrite();
             // Create the CPU and start it running.
             _cpu = new CPU(_mem, interruptHandler);
             _cpu.Run();
