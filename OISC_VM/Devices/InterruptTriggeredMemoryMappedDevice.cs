@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OISC_VM
+namespace OISC_VM.Devices
 {
     public abstract class InterruptTriggeredMemoryMappedDevice : IMemoryMappedDevice
     {
         private IMemoryBus _memoryBus;
 
-        public InterruptTriggeredMemoryMappedDevice(IMemoryBus memoryBus, InterruptHandler interruptHandler, int memoryRangeStart, int memoryRangeLength, int refreshInterval)
+        public InterruptTriggeredMemoryMappedDevice(IMemoryBus memoryBus, InterruptHandler interruptHandler, String irqName, int memoryRangeStart, int memoryRangeLength)
         {
             _memoryBus = memoryBus;
             this.MemoryRangeStart = memoryRangeStart;
             this.MemoryRangeLength = memoryRangeLength;
 
-            interruptHandler.RegisterHardwareInterrupt(1048568, 127, true, RefreshInterruptTriggered);
+            interruptHandler.RegisterHardwareInterrupt(irqName, 1048568, 127, true, RefreshInterruptTriggered);
 
         }
 
-        public void RefreshInterruptTriggered(HardwareInterruptRequest irq)
+        public void RefreshInterruptTriggered(HardwareInterruptRequest irq, long memoryAddress, long memoryValue)
         {
             RefreshDevice();
         }
@@ -43,5 +43,7 @@ namespace OISC_VM
             get;
             private set;
         }
+
+        public abstract String Name { get; }
     }
 }

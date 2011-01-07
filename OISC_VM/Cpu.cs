@@ -7,21 +7,24 @@ namespace OISC_VM
 {
     public class SoftwareInterruptRequest
     {
-        public SoftwareInterruptRequest(int priority, long jumpAddress, long interruptFlagAddress)
+        public SoftwareInterruptRequest(String name, int priority, long jumpAddress, long interruptFlagAddress)
         {
             this.Priority = priority;
             this.JumpAddress = jumpAddress;
             this.InterruptFlagAddress = interruptFlagAddress;
+            this.Name = name;
         }
 
         public int Priority { get; set; }
         public long JumpAddress { get; set; }
         public long InterruptFlagAddress { get; set; }
+        public string Name { get; private set; }
     }
 
     public class CPU
     {
         Stack<long> _interruptReturnAddress;
+        Stack<SoftwareInterruptRequest> _interruptReturnStack;
         List<SoftwareInterruptRequest> _interruptJump;
 
         private long _pc;
@@ -40,6 +43,7 @@ namespace OISC_VM
             interruptHandler.SoftwareInterruptTriggered += new EventHandler<InterruptEventArgs>(InterruptHandler_InterruptTriggered);
 
             _interruptReturnAddress = new Stack<long>();
+            _interruptReturnStack = new Stack<SoftwareInterruptRequest>();
             _interruptJump = new List<SoftwareInterruptRequest>();
         }
 
@@ -117,12 +121,14 @@ namespace OISC_VM
         private void PushExecutionStack()
         {
             _interruptReturnAddress.Push(_pc);
+            _interruptReturnStack.Push(_currentInterrupt);
             _pc = 0;
         }
 
         private void PopExecutionStack()
         {
             _pc = _interruptReturnAddress.Pop();
+            _currentInterrupt = _interruptReturnStack.Pop();
         }
     }
 }

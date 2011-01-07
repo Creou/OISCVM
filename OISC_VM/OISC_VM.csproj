@@ -44,16 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleDevice.cs" />
+    <Compile Include="Devices\ConsoleDevice.cs" />
     <Compile Include="Cpu.cs" />
+    <Compile Include="Devices\KeyboardDevice.cs" />
     <Compile Include="Extensions\EventSafeTriggerExtensions.cs" />
     <Compile Include="HardwareInterruptRequest.cs" />
     <Compile Include="IMemoryBus.cs" />
-    <Compile Include="IMemoryMapppedDevice.cs" />
+    <Compile Include="Devices\IMemoryMapppedDevice.cs" />
     <Compile Include="InstructionOperands.cs" />
     <Compile Include="InterruptEventArgs.cs" />
     <Compile Include="InterruptHandler.cs" />
-    <Compile Include="InterruptTriggeredMemoryMappedDevice.cs" />
+    <Compile Include="Devices\InterruptTriggeredMemoryMappedDevice.cs" />
+    <Compile Include="InterruptQueueingHandler.cs" />
     <Compile Include="Memory.cs" />
     <Compile Include="MemoryChangedEventArgs.cs" />
     <Compile Include="Program.cs" />
