@@ -10,16 +10,18 @@ namespace OISC_VM
 {
     public class Memory : IMemoryBus
     {
-        // Create the memory.
-        byte[] _memory;
+        // 1,048,576 = 1Mb.
+        private long _memorySize = 1048576;
+        private byte[] _memory;
 
         public event EventHandler<MemoryChangedEventArgs> MemoryChanged;
 
         public Memory()
         {
-            // 1,048,576 = 1Mb.
-            _memory = new byte[1048576];
+            _memory = new byte[_memorySize];
         }
+
+        public long Size { get { return _memorySize; } }
 
         public void LoadProgram(String fileName) 
         {
@@ -85,6 +87,8 @@ namespace OISC_VM
             {
                 OnMemoryChanged(memoryLocation, value);
             }
+
+            //Console.WriteLine("{0}: {1}", memoryLocation, value);
         }
 
         public void ResetData(long memoryLocation)
