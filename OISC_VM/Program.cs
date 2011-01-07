@@ -42,13 +42,15 @@ namespace OISC_VM
             DisplayDevices(_mem, _mappedDevices, interruptHandler);
 
             Console.WriteLine();
-            Console.WriteLine("Ready. Press enter to begin");
+            Console.WriteLine("Ready. Press enter to begin...");
             Console.ReadLine();
             Console.Clear();
 
+            // Start the keyboard device.
+            keyboardDevice.StartDevice();
+
             // Create the CPU and start it running.
             _cpu = new CPU(_mem, interruptHandler);
-            Thread.Sleep(1000);
             _cpu.Run();
 
             Console.ReadLine();

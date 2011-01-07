@@ -8,21 +8,28 @@ namespace OISC_VM.Devices
 {
     public class KeyboardDevice : IMemoryMappedDevice
     {
+        private IMemoryBus _memoryBus;
+
         public KeyboardDevice(IMemoryBus memoryBus, InterruptHandler interruptHandler, int memoryRangeStart, int memoryRangeLength)
         {
             this.MemoryRangeStart = memoryRangeStart;
             this.MemoryRangeLength = memoryRangeLength;
 
-            interruptHandler.RegisterSoftwareInterruptQueue("Keyboard request queue", "Keyboard", 1048439, 1048431);
+            _memoryBus = memoryBus;
 
+            interruptHandler.RegisterSoftwareInterruptQueue("Keyboard request queue", "Keyboard", 1048439, 1048431);
+        }
+
+        public void StartDevice()
+        {
             Task.Factory.StartNew(() =>
             {
                 while (true)
                 {
                     ConsoleKeyInfo data = Console.ReadKey(true);
                     char charData = data.KeyChar;
-                    memoryBus.WriteData(1048319, charData);
-                    memoryBus.WriteData(1048431, 1);
+                    _memoryBus.WriteData(1048319, charData);
+                    _memoryBus.WriteData(1048431, 1);
                 }
             });
         }
