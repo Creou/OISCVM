@@ -1,0 +1,26 @@
+// Jump to program start
+           0 0 $ProgStart
+
+Zero:      0
+ZeroB:     $KbrdHandl
+Flag:      127
+
+// Register the keyboard interrupt. 
+ProgStart: $ZeroB $Zero
+           $Zero #1048439
+
+// Loop indefinatly.
+Loop:      $Zero $Zero $Loop
+
+// When the keyboard interrupt is triggered, copy the keyboard memory to console memory.
+KbrdHandl: #1048448 #1048448
+           #1048319 $Zero
+           $Zero #1048448
+           $Zero $Zero
+
+// Copy the flag to the console to trigger a refresh.
+           $Flag $Zero
+           $Zero #1048568
+
+// End the interrupt to jump back to the loop
+           $Zero $Zero -1
