@@ -11,8 +11,8 @@ namespace OISC_Compiler.Instructions
         public Address Operand_b { get; private set; }
         public Address Operand_c { get; private set; }
 
-        public AddressableMemoryInstruction Operand_a_Address{get; private set;}
-        public AddressableMemoryInstruction Operand_b_Address{get; private set;}
+        public AddressableMemoryInstruction Operand_a_Address { get; private set; }
+        public AddressableMemoryInstruction Operand_b_Address { get; private set; }
 
         public override int SourceLength { get { return 3; } }
         public override long BinaryLength { get { return (64*3)/8; } }

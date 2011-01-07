@@ -98,6 +98,12 @@ namespace OISC_Compiler
                 {
                     addressedOperandsInstruction.MapAddressedOperands(instructionDictionary, labeledInstructionDictionary);
                 }
+
+                AddressableMemoryInstruction memoryValue = instruction.Value as AddressableMemoryInstruction;
+                if (memoryValue != null)
+                {
+                    memoryValue.MapMemoryValue(instructionDictionary, labeledInstructionDictionary);
+                }
             }
 
             return instructionDictionary.Values;

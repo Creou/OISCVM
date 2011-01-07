@@ -43,8 +43,16 @@ namespace OISC_Compiler.Instructions
                         else if (instructionData.Length == 2)
                         {
                             // Labeled memory value.
-                            String initialValue = instructionData[1];
-                            return new AddressableMemoryInstruction(trimmedSourceLine, sourceLineNumber, sourceAddress, sourceLabel, initialValue);
+                            String value = instructionData[1];
+                            if (value.StartsWith(LexicalSymbols.LabelAddress)) 
+                            {
+                                Address valueAddress = new Address(value);
+                                return new AddressableMemoryInstruction(trimmedSourceLine, sourceLineNumber, sourceAddress, sourceLabel, valueAddress);
+                            }
+                            else
+                            {
+                                return new AddressableMemoryInstruction(trimmedSourceLine, sourceLineNumber, sourceAddress, sourceLabel, value);
+                            }
                         }
                         else
                         {
