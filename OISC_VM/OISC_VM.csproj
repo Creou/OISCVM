@@ -56,7 +56,7 @@
     <Compile Include="InterruptHandler.cs" />
     <Compile Include="Devices\InterruptTriggeredMemoryMappedDevice.cs" />
     <Compile Include="InterruptQueueingHandler.cs" />
-    <Compile Include="Memory.cs" />
+    <Compile Include="MemoryController.cs" />
     <Compile Include="MemoryChangedEventArgs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -8,7 +8,7 @@ using OISC_VM.Extensions;
 
 namespace OISC_VM
 {
-    public class Memory : IMemoryBus
+    public class MemoryController : IMemoryBus
     {
         // 1,048,576 = 1Mb.
         private long _memorySize = 1048576;
@@ -16,7 +16,7 @@ namespace OISC_VM
 
         public event EventHandler<MemoryChangedEventArgs> MemoryChanged;
 
-        public Memory()
+        public MemoryController()
         {
             _memory = new byte[_memorySize];
         }

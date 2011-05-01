@@ -10,7 +10,7 @@ namespace OISC_VM
 {
     class Program
     {
-        public static Memory _mem;
+        public static MemoryController _mem;
         public static CPU _cpu;
         
         public static List<IMemoryMappedDevice> _mappedDevices;
@@ -18,7 +18,7 @@ namespace OISC_VM
         static void Main(string[] args)
         {
             // Create memory and load the program and arguments (if present).
-            _mem = new Memory();
+            _mem = new MemoryController();
             if (args.Length >= 1)
             {
                 _mem.LoadProgram(args[0], args.Skip(1));
@@ -56,7 +56,7 @@ namespace OISC_VM
             Console.ReadLine();
         }
 
-        private static void DisplayDevices(Memory memory, List<IMemoryMappedDevice> devices, InterruptHandler interruptHandler)
+        private static void DisplayDevices(MemoryController memory, List<IMemoryMappedDevice> devices, InterruptHandler interruptHandler)
         {
             Console.WriteLine("Memory {0} bytes", memory.Size );
             Console.WriteLine();

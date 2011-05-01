@@ -34,9 +34,9 @@ namespace OISC_VM
         private long _bValue;
         private long _cValue;
 
-        private Memory _memoryBus;
+        private MemoryController _memoryBus;
 
-        public CPU(Memory memoryBus, InterruptHandler interruptHandler)
+        public CPU(MemoryController memoryBus, InterruptHandler interruptHandler)
         {
             _memoryBus = memoryBus;
 
